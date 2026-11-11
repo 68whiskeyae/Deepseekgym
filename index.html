@@ -5,151 +5,162 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>1% GYM</title>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: system-ui, -apple-system, sans-serif;
-        }
-        body {
-            background-color: #0D0D0D;
-            color: white;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            padding: 20px;
-        }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 40px;
-            margin-top: 20px;
-        }
-        .logo {
-            color: #39FF14;
-            font-size: 24px;
-            font-weight: 900;
-            letter-spacing: 1px;
-        }
-        .streak {
-            background-color: #1A1A1A;
-            padding: 8px 16px;
-            border-radius: 12px;
-            font-size: 14px;
-        }
-        .ring-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 40px 0;
-        }
-        .ring {
-            width: 220px;
-            height: 220px;
-            border-radius: 50%;
-            background: conic-gradient(#39FF14 0%, #39FF14 35%, #1F1F1F 35%, #1F1F1F 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            transition: background 0.5s ease;
-        }
-        .ring::before {
-            content: '';
-            position: absolute;
-            width: 188px;
-            height: 188px;
-            background-color: #0D0D0D;
-            border-radius: 50%;
-        }
-        .ring-text {
-            position: relative;
-            text-align: center;
-            z-index: 1;
-        }
-        .percent {
-            font-size: 48px;
-            font-weight: 900;
-        }
-        .today {
-            font-size: 14px;
-            color: #888;
-        }
-        .mission-card {
-            background-color: #1A1A1A;
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-right: 4px solid #39FF14;
-        }
-        .mission-title {
-            color: #39FF14;
-            font-size: 14px;
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
-        .mission-text {
-            font-size: 18px;
-            font-weight: 600;
-        }
-        .btn {
-            background-color: #39FF14;
-            color: #0D0D0D;
-            border: none;
-            border-radius: 16px;
-            padding: 20px;
-            font-size: 18px;
-            font-weight: 900;
-            cursor: pointer;
-            margin-top: auto;
-            margin-bottom: 20px;
-            width: 100%;
-        }
-        .btn:active {
-            transform: scale(0.98);
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+        body { background-color: #0D0D0D; color: white; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        
+        .screen { display: none; flex: 1; padding: 20px; overflow-y: auto; padding-bottom: 80px; }
+        .screen.active { display: flex; flex-direction: column; }
+
+        /* الشاشة الرئيسية */
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .logo { color: #39FF14; font-size: 24px; font-weight: 900; }
+        .ring-container { display: flex; justify-content: center; align-items: center; margin: 30px 0; }
+        .ring { width: 220px; height: 220px; border-radius: 50%; background: conic-gradient(#39FF14 0%, #39FF14 35%, #1F1F1F 35%, #1F1F1F 100%); display: flex; justify-content: center; align-items: center; position: relative; }
+        .ring::before { content: ''; position: absolute; width: 188px; height: 188px; background-color: #0D0D0D; border-radius: 50%; }
+        .ring-text { position: relative; text-align: center; z-index: 1; }
+        .percent { font-size: 48px; font-weight: 900; }
+        .mission-card { background-color: #1A1A1A; border-radius: 16px; padding: 20px; border-right: 4px solid #39FF14; }
+
+        /* شاشة التمارين */
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; margin-bottom: 5px; color: #888; font-size: 14px; }
+        .input-group input { width: 100%; padding: 15px; border-radius: 10px; border: 1px solid #333; background-color: #1A1A1A; color: white; font-size: 16px; }
+        .input-group input:focus { outline: none; border-color: #39FF14; }
+        .save-btn { background-color: #39FF14; color: #0D0D0D; border: none; padding: 15px; border-radius: 10px; font-size: 18px; font-weight: bold; width: 100%; margin-top: 10px; cursor: pointer; }
+        
+        .workout-list { margin-top: 20px; }
+        .workout-item { background-color: #1A1A1A; padding: 15px; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .workout-name { font-weight: bold; color: #39FF14; }
+        .workout-details { font-size: 14px; color: #ccc; }
+
+        /* شريط التنقل السفلي */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background-color: #1A1A1A; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #333; z-index: 10; }
+        .nav-btn { background: none; border: none; color: #888; font-size: 16px; font-weight: bold; cursor: pointer; }
+        .nav-btn.active { color: #39FF14; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <div class="logo">1% GYM</div>
-        <div class="streak">🔥 3 أيام</div>
-    </div>
-
-    <div class="ring-container">
-        <div class="ring" id="progressRing">
-            <div class="ring-text">
-                <div class="percent" id="percentText">35%</div>
-                <div class="today">اليوم</div>
+    <!-- الشاشة الرئيسية -->
+    <div id="home-screen" class="screen active">
+        <div class="header">
+            <div class="logo">1% GYM</div>
+            <div style="background-color: #1A1A1A; padding: 8px 16px; border-radius: 12px; font-size: 14px;">🔥 3 أيام</div>
+        </div>
+        <div class="ring-container">
+            <div class="ring" id="progressRing">
+                <div class="ring-text">
+                    <div class="percent" id="percentText">35%</div>
+                    <div style="font-size: 14px; color: #888;">اليوم</div>
+                </div>
             </div>
+        </div>
+        <div class="mission-card">
+            <div style="color: #39FF14; font-size: 14px; font-weight: bold; margin-bottom: 8px;">مهمة 1% اليوم</div>
+            <div style="font-size: 18px; font-weight: 600;">10 دقائق مشي + كوب ماء</div>
         </div>
     </div>
 
-    <div class="mission-card">
-        <div class="mission-title">مهمة 1% اليوم</div>
-        <div class="mission-text">10 دقائق مشي + كوب ماء</div>
+    <!-- شاشة تسجيل التمارين -->
+    <div id="log-screen" class="screen">
+        <h2 style="margin-bottom: 20px; color: #39FF14;">تسجيل تمرين جديد</h2>
+        
+        <div class="input-group">
+            <label>اسم التمرين (مثال: Bench Press)</label>
+            <input type="text" id="exName" placeholder="اكتب اسم التمرين...">
+        </div>
+        <div class="input-group">
+            <label>الوزن (كجم)</label>
+            <input type="number" id="exWeight" placeholder="مثال: 80">
+        </div>
+        <div class="input-group">
+            <label>عدد التكرارات</label>
+            <input type="number" id="exReps" placeholder="مثال: 10">
+        </div>
+        
+        <button class="save-btn" onclick="saveWorkout()">حفظ التمرين</button>
+
+        <h3 style="margin-top: 30px; margin-bottom: 10px;">التمارين المسجلة اليوم:</h3>
+        <div id="workoutList" class="workout-list">
+            <!-- سيتم إضافة التمارين هنا -->
+        </div>
     </div>
 
-    <button class="btn" onclick="increaseProgress()">+ سجل 1%</button>
+    <!-- شريط التنقل -->
+    <div class="bottom-nav">
+        <button class="nav-btn active" onclick="switchScreen('home')">الرئيسية</button>
+        <button class="nav-btn" onclick="switchScreen('log')">التمارين</button>
+    </div>
 
     <script>
-        let progress = 35;
-        
-        function increaseProgress() {
-            if (progress < 100) {
-                progress += 10;
-                if (progress > 100) progress = 100;
-                
-                document.getElementById('percentText').innerText = progress + '%';
-                
-                const ring = document.getElementById('progressRing');
-                ring.style.background = `conic-gradient(#39FF14 0%, #39FF14 ${progress}%, #1F1F1F ${progress}%, #1F1F1F 100%)`;
-            }
+        // 1. التنقل بين الشاشات
+        function switchScreen(screen) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            
+            document.getElementById(screen + '-screen').classList.add('active');
+            event.target.classList.add('active');
         }
+
+        // 2. حفظ التمارين
+        function saveWorkout() {
+            const name = document.getElementById('exName').value;
+            const weight = document.getElementById('exWeight').value;
+            const reps = document.getElementById('exReps').value;
+
+            if(!name || !weight || !reps) {
+                alert('يرجى تعبئة جميع الحقول');
+                return;
+            }
+
+            const workout = { name, weight, reps, date: new Date().toLocaleDateString('ar-EG') };
+            
+            // جلب التمارين القديمة من ذاكرة المتصفح
+            let workouts = JSON.parse(localStorage.getItem('workouts')) || [];
+            workouts.push(workout);
+            
+            // حفظ التحديث في ذاكرة المتصفح
+            localStorage.setItem('workouts', JSON.stringify(workouts));
+
+            // مسح الحقول بعد الحفظ
+            document.getElementById('exName').value = '';
+            document.getElementById('exWeight').value = '';
+            document.getElementById('exReps').value = '';
+
+            loadWorkouts(); // تحديث القائمة
+            alert('تم حفظ التمرين بنجاح! 💪');
+        }
+
+        // 3. عرض التمارين المحفوظة
+        function loadWorkouts() {
+            const list = document.getElementById('workoutList');
+            list.innerHTML = '';
+            
+            let workouts = JSON.parse(localStorage.getItem('workouts')) || [];
+            
+            if(workouts.length === 0) {
+                list.innerHTML = '<p style="color: #888; font-size: 14px;">لا توجد تمارين مسجلة بعد.</p>';
+                return;
+            }
+
+            // عرض التمارين بالعكس (الأحدث أولاً)
+            workouts.slice().reverse().forEach(w => {
+                const div = document.createElement('div');
+                div.className = 'workout-item';
+                div.innerHTML = `
+                    <div>
+                        <div class="workout-name">${w.name}</div>
+                        <div class="workout-details">${w.weight} كجم × ${w.reps} تكرار</div>
+                    </div>
+                    <div style="font-size: 12px; color: #666;">${w.date}</div>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        // تشغيل دالة العرض عند فتح التطبيق
+        loadWorkouts();
     </script>
 
 </body>
 </html>
-      
