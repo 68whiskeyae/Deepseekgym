@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>1% GYM</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+        body {
+            background-color: #0D0D0D;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            margin-top: 20px;
+        }
+        .logo {
+            color: #39FF14;
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: 1px;
+        }
+        .streak {
+            background-color: #1A1A1A;
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+        }
+        .ring-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 40px 0;
+        }
+        .ring {
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            background: conic-gradient(#39FF14 0%, #39FF14 35%, #1F1F1F 35%, #1F1F1F 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            transition: background 0.5s ease;
+        }
+        .ring::before {
+            content: '';
+            position: absolute;
+            width: 188px;
+            height: 188px;
+            background-color: #0D0D0D;
+            border-radius: 50%;
+        }
+        .ring-text {
+            position: relative;
+            text-align: center;
+            z-index: 1;
+        }
+        .percent {
+            font-size: 48px;
+            font-weight: 900;
+        }
+        .today {
+            font-size: 14px;
+            color: #888;
+        }
+        .mission-card {
+            background-color: #1A1A1A;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-right: 4px solid #39FF14;
+        }
+        .mission-title {
+            color: #39FF14;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .mission-text {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        .btn {
+            background-color: #39FF14;
+            color: #0D0D0D;
+            border: none;
+            border-radius: 16px;
+            padding: 20px;
+            font-size: 18px;
+            font-weight: 900;
+            cursor: pointer;
+            margin-top: auto;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        .btn:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="logo">1% GYM</div>
+        <div class="streak">🔥 3 أيام</div>
+    </div>
+
+    <div class="ring-container">
+        <div class="ring" id="progressRing">
+            <div class="ring-text">
+                <div class="percent" id="percentText">35%</div>
+                <div class="today">اليوم</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mission-card">
+        <div class="mission-title">مهمة 1% اليوم</div>
+        <div class="mission-text">10 دقائق مشي + كوب ماء</div>
+    </div>
+
+    <button class="btn" onclick="increaseProgress()">+ سجل 1%</button>
+
+    <script>
+        let progress = 35;
+        
+        function increaseProgress() {
+            if (progress < 100) {
+                progress += 10;
+                if (progress > 100) progress = 100;
+                
+                document.getElementById('percentText').innerText = progress + '%';
+                
+                const ring = document.getElementById('progressRing');
+                ring.style.background = `conic-gradient(#39FF14 0%, #39FF14 ${progress}%, #1F1F1F ${progress}%, #1F1F1F 100%)`;
+            }
+        }
+    </script>
+
+</body>
+</html>
+      
